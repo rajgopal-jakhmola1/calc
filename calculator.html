@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+    <style>
+        #main{
+            
+            width: 30vw;
+            height: 80vh;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(7,1fr);
+            background-color: rgb(20, 20, 20);
+            color: blanchedalmond;
+            gap:2px;
+            border: 10px solid black;
+
+        }
+        #main:hover{
+            cursor:default;
+        }
+        #main > *{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: black;
+            cursor: pointer;
+            user-select: none;
+        }
+        #main>*:hover{
+            background-color: rgb(81, 210, 30);
+            color: black;
+        }
+        #historycontainer{
+            
+        }
+        #main > .span4{
+            grid-column: span 4;
+            background-color: whitesmoke;
+            color:black;
+            justify-content: flex-end;
+            user-select: text;
+        }
+        #main >.span4:hover{
+            cursor: text;
+        }
+        .span2{
+            grid-column: span 2;
+            
+        }
+    </style>
+
+</head>
+<body>
+    <div id="main">
+        <div id="displaycontainer" class="span4"></div>
+        <div id="historycontainer" class="span4"></div>
+        <div id="AC" class="span2">AC</div>
+        <div id="BACK">Back</div>
+        <div class="opr">/</div>
+        <div class="num">7</div>
+        <div class="num">8</div>
+        <div class="num">9</div>
+        <div class="opr">*</div>
+        <div class="num">4</div>
+        <div class="num">5</div>
+        <div class="num">6</div>
+        <div class="opr">-</div>
+        <div class="num">1</div>
+        <div class="num">2</div>
+        <div class="num">3</div>
+        <div class="opr">+</div>
+        <div class="num">0</div>
+        <div id="pointe">.</div>
+        <div id="equaly" class="span2">=</div>
+    </div>
+    <script>
+        let numbers=document.getElementsByClassName("num")
+        let displaycontainer = document.getElementById("displaycontainer")
+        let pointe = document.getElementById("pointe")
+        let back = document.getElementById("BACK")
+        let ac = document.getElementById("AC")
+        let historycontainer = document.getElementById("historycontainer")
+        let oprs = document.getElementsByClassName("opr")
+        let opr = Array.from(oprs)
+        let numbersarr = Array.from(numbers)
+        let currentopr=""
+        let lastopr=""
+        let currentnumber
+        let result
+        let equalsto = document.getElementById("equaly")
+        
+        equalsto.addEventListener("click",()=>{
+            if(displaycontainer.textContent==="")
+            {
+                displaycontainer.textContent=result
+            }
+            else if(!(displaycontainer.textContent===""))
+                {
+                    currentnumber=displaycontainer.textContent                  
+                    switch(currentopr)
+                    {
+                        case "+":
+                            result=result+Number(currentnumber)
+                            break
+                        case "-":
+                            result=result-Number(currentnumber)
+                            break
+                        case "*":
+                            result=result*Number(currentnumber)
+                            break
+                        case "/":
+                            result=result/Number(currentnumber)
+                            break
+                    }
+                    displaycontainer.textContent=result
+                    historycontainer.textContent=""
+                    
+                }
+
+                currentnumber=""
+                currentopr=""
+            
+        })
+
+        numbersarr.forEach((item)=>{
+            item.addEventListener("click",()=>{
+                displaycontainer.append(item.textContent)
+            })
+        })
+        pointe.addEventListener("click",()=>{
+            let displaycontainerarray = displaycontainer.textContent.split('')
+            let c=0
+            displaycontainerarray.forEach(function(item){
+                if(item===".")
+                {
+                    c++;
+                }
+            })
+            if(c===0){displaycontainer.append(".")}
+        })
+        back.addEventListener("click",()=>{
+            let newdisplaytext = displaycontainer.textContent.split('')
+            newdisplaytext.pop()
+            newdisplaytext =  newdisplaytext.join('')
+            displaycontainer.textContent=newdisplaytext
+            console.log("new display text: ", newdisplaytext)
+            if(historycontainer.textContent==="")
+            {
+                result=undefined
+            }
+        })
+        ac.addEventListener("click",()=>{
+            displaycontainer.textContent=""
+            historycontainer.textContent=""
+            result=undefined
+            currentnumber=""
+            lastopr=""
+
+        })
+
+        opr.forEach((item)=>{
+            item.addEventListener("click",()=>{
+                lastopr = currentopr
+                currentopr = item.textContent
+                
+                if(!(displaycontainer.textContent===""))
+                {
+                    currentnumber=displaycontainer.textContent
+                    if(result===undefined){result=Number(currentnumber)
+                    console.log("run")}
+                    else{
+                        switch(lastopr)
+                        {
+                            case "+":
+                                result=result+Number(currentnumber)
+                                break
+                            case "-":
+                                result=result-Number(currentnumber)
+                                break
+                            case "*":
+                                result=result*Number(currentnumber)
+                                break
+                            case "/":
+                                result=result/Number(currentnumber)
+                                break
+                        }
+                        
+                    }
+                }
+                
+                    displaycontainer.textContent=""
+                    historycontainer.textContent=""
+                    console.log(result ,currentopr)
+                    if(!(result===undefined)){historycontainer.append(result+currentopr)}
+            })
+           
+        })
+    </script>
+</body>
+</html>
